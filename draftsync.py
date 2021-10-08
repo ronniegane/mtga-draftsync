@@ -3,7 +3,24 @@ import requests
 import time
 
 
+CSV_FIELD_NAMES = [
+    "idArena",
+    "name",
+    "rating",
+    "color",
+    "rarity",
+]  # Fields to include from 17Lands
+
+
 def main():
+    expansion = "MID"
+    format = "PremierDraft"
+
+    # Grab data from 17Lands
+    outputFilename = f"17-lands-{expansion}-{format}.csv"
+    fetch17LandsRatings(expansion, format, outputFilename)
+    print(f"17Lands ratings output to {outputFilename}")
+
     ratingsFile = input("CSV file to load from:")
     # Parse CSV
     ratings = parseCSV(ratingsFile)
@@ -11,6 +28,41 @@ def main():
     # Upload to MTGAHelper endpoint
     userId = input("Enter your MTGAHelper user ID (from your Profile page):")
     upload(userId, ratings)
+
+
+def fetch17LandsRatings(expansion, format, outputFilename):
+    # Fetch latest data
+    queryParams = {
+        "expansion": expansion,
+        "format": format,
+        "start_date": "2021-01-01",
+        "end_date": "2021-10-09",
+    }
+    response = requests.get(
+        "https://www.17lands.com/card_ratings/data", params=queryParams
+    )
+
+    cardRatings = response.json()
+
+    for card in cardRatings:
+        # Calculate a 1-10 rating based on winrate
+        card["rating"] = rateCard(card)
+        # Lookup the card's MTG Arena id
+        card["idArena"] = 12345
+
+    # Write to CSV
+    with open(outputFilename, "w") as csvFile:
+        writer = csv.DictWriter(
+            csvFile, fieldnames=CSV_FIELD_NAMES, extrasaction="ignore"
+        )
+        writer.writeheader()
+        writer.writerows(cardRatings)
+    print("done")
+
+
+def rateCard(card):
+    # Turn 17Lands card statistics
+    return 5
 
 
 def parseCSV(filename):
