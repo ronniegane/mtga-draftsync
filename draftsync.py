@@ -6,14 +6,23 @@ import time
 def main():
     ratingsFile = input("CSV file to load from:")
     # Parse CSV
-    with open(ratingsFile) as f:
+    ratings = parseCSV(ratingsFile)
+
+    # Upload to MTGAHelper endpoint
+    userId = input("Enter your MTGAHelper user ID (from your Profile page):")
+    upload(userId, ratings)
+
+
+def parseCSV(filename):
+    with open(filename) as f:
         ratings = [
             {k: v for k, v in row.items()}
             for row in csv.DictReader(f, skipinitialspace=True)
         ]
+    return ratings
 
-    # Upload to MTGAHelper endpoint
-    userId = input("Enter your MTGAHelper user ID (from your Profile page):")
+
+def upload(userId, ratings):
     cookies = {"userId": userId}
     totalTime = 0
     for i in range(len(ratings)):
