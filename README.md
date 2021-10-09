@@ -15,6 +15,24 @@ You'll need your user ID which can be found on your profile page: https://mtgahe
 Install Python3 and then the requirements:
 `pip install -r requirements.txt`
 
+## All in one
+Call `python draftsync.py`
+
+Enter your MTGAHelper user ID
+
+wait... (currently uploads are 1-by-1 so can take some time)
+
+Done! Start up MTGAHelper, open MTG Arena, and get drafting!
+
+## Fetch ratings from 17Lands
+This will simply dump the ratings from 17Lands into a file:
+
+`17-lands-$SET-$FORMAT.csv`
+
+without uploading to MTGAHelper. This lets you make your own tweaks before you upload.
+
+Call `python fetch.py`, that's it.
+
 ## Upload your own CSV
 DraftSync will accept any CSV as long as it has the following fields:
 - **idArena** : this is the 5-digit id that MTG Arena uses for their cards
@@ -25,7 +43,7 @@ You can have other fields in the CSV for ease of use when reading it (I usually 
 
 Having cards from different sets in the same CSV is fine, just keep in mind that the more cards you have the longer it will take.
 
-Call `python draftsync.py`
+Call `python upload.py`
 
 Enter your CSV filename
 
