@@ -53,6 +53,12 @@ wait... (currently uploads are 1-by-1 so can take some time)
 
 Done! Start up MTGAHelper, open MTG Arena, and get drafting!
 
+## Update the card mapping
+The project needs to map from a card's name to the 5-digit code that MTG Arena uses to identify it, because unfortunately 17Lands doesn't provide this directly.
+We use a library file `card_map.json` that should be updated whenever a new set comes out. You can update your local version by running:
+
+`python card_id_map.py`
+
 # Acknowledgements
 Thanks to [this reddit thread](https://www.reddit.com/r/lrcast/comments/pr8cf9/best_way_to_take_advantage_of_17lands_data_in/) and [this .NET solution](https://github.com/LazarQt/LimitedPower.DraftHelperSync) by [LazarQt](https://github.com/LazarQt) for the inspiration.
 
