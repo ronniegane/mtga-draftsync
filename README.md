@@ -56,4 +56,8 @@ Done! Start up MTGAHelper, open MTG Arena, and get drafting!
 # Acknowledgements
 Thanks to [this reddit thread](https://www.reddit.com/r/lrcast/comments/pr8cf9/best_way_to_take_advantage_of_17lands_data_in/) and [this .NET solution](https://github.com/LazarQt/LimitedPower.DraftHelperSync) by [LazarQt](https://github.com/LazarQt) for the inspiration.
 
-Thanks to the guys at https://mtgarenahelper.com for making such an awesome tool! Support them on Patreon to help keep things running: https://www.patreon.com/mtgahelper
+Thanks to the guys at https://mtgarenahelper.com and https://www.17lands.com for making such awesome tools! Support them on Patreon to help keep things running:
+
+https://www.patreon.com/mtgahelper
+
+https://www.patreon.com/17lands
