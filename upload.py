@@ -5,12 +5,12 @@ import csv
 
 def main():
     # If called directly, upload a named CSV file
-    ratingsFile = input("CSV file to load from:")
+    ratingsFile = input("CSV file to load from: ")
     # Parse CSV
     ratings = parseCSV(ratingsFile)
 
     # Upload to MTGAHelper endpoint
-    userId = input("Enter your MTGAHelper user ID (from your Profile page):")
+    userId = input("Enter your MTGAHelper user ID (from your Profile page): ")
     put(userId, ratings)
 
 

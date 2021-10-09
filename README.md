@@ -18,6 +18,8 @@ Install Python3 and then the requirements:
 ## All in one
 Call `python draftsync.py`
 
+Enter the set and the draft type you want to use, or just hit Enter to accept the defaults
+
 Enter your MTGAHelper user ID
 
 wait... (currently uploads are 1-by-1 so can take some time)
@@ -31,7 +33,9 @@ This will simply dump the ratings from 17Lands into a file:
 
 without uploading to MTGAHelper. This lets you make your own tweaks before you upload.
 
-Call `python fetch.py`, that's it.
+Call `python fetch.py`
+
+Enter the set and the draft type you want to use, or just hit Enter to accept the defaults.
 
 ## Upload your own CSV
 DraftSync will accept any CSV as long as it has the following fields:

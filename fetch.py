@@ -14,8 +14,15 @@ CSV_FIELD_NAMES = [
 
 def main():
     # If called directly, download and store as CSV
-    expansion = "MID"
-    format = "PremierDraft"
+    expansion = (
+        input("Enter MTG set to update, or leave blank to default to MID: ") or "MID"
+    )
+    format = (
+        input(
+            "Enter draft type to fetch ratings for, or leave blank to default to Premier: "
+        )
+        or "PremierDraft"
+    )
     outputFilename = f"17-lands-{expansion}-{format}.csv"
 
     rawRatings = fetch17LandsRatings(expansion, format)
