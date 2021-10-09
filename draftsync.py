@@ -7,6 +7,7 @@ CSV_FIELD_NAMES = [
     "idArena",
     "name",
     "rating",
+    "note",
     "color",
     "rarity",
 ]  # Fields to include from 17Lands
@@ -44,11 +45,23 @@ def fetch17LandsRatings(expansion, format, outputFilename):
 
     cardRatings = response.json()
 
+    # Find min and max of key states to scale ratings
+    minWR = cardRatings[0]["win_rate"]
+    maxWR = minWR
+    for card in cardRatings:
+        if card["win_rate"] > maxWR:
+            maxWR = card["win_rate"]
+        if card["win_rate"] < minWR:
+            minWR = card["win_rate"]
+
     for card in cardRatings:
         # Calculate a 1-10 rating based on winrate
-        card["rating"] = rateCard(card)
+        card["rating"] = rateCardByWinrate(card, minWR, maxWR)
         # Lookup the card's MTG Arena id
         card["idArena"] = 12345
+        card[
+            "note"
+        ] = f"ALSA: {card['avg_seen']:.1f} | OH: {card['opening_hand_win_rate']*100:.1f} | GIH: {card['ever_drawn_win_rate']*100:.1f} | IWD: {card['drawn_improvement_win_rate']*100:.1f}"
 
     # Write to CSV
     with open(outputFilename, "w") as csvFile:
@@ -60,9 +73,10 @@ def fetch17LandsRatings(expansion, format, outputFilename):
     print("done")
 
 
-def rateCard(card):
-    # Turn 17Lands card statistics
-    return 5
+def rateCardByWinrate(card, minWR, maxWR):
+    # Turn 17Lands card statistics into a 0-10 rating
+    # Very simple first attempt: based on in-deck winrate
+    return round(10 * (card["win_rate"] - minWR) / (maxWR - minWR))
 
 
 def parseCSV(filename):
