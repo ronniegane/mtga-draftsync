@@ -46,6 +46,8 @@ def fetch17LandsRatings(expansion, format, outputFilename):
     cardRatings = response.json()
 
     # Find min and max of key states to scale ratings
+    minSeen = cardRatings[0]["avg_seen"]
+    maxSeen = minSeen
     minWR = cardRatings[0]["win_rate"]
     maxWR = minWR
     for card in cardRatings:
@@ -53,10 +55,14 @@ def fetch17LandsRatings(expansion, format, outputFilename):
             maxWR = card["win_rate"]
         if card["win_rate"] < minWR:
             minWR = card["win_rate"]
+        if card["avg_seen"] < minSeen:
+            minSeen = card["avg_seen"]
+        if card["avg_seen"] > maxSeen:
+            maxSeen = card["avg_seen"]
 
     for card in cardRatings:
         # Calculate a 1-10 rating based on winrate
-        card["rating"] = rateCardByWinrate(card, minWR, maxWR)
+        card["rating"] = rateCardByLastSeenAt(card, minSeen, maxSeen)
         # Lookup the card's MTG Arena id
         card["idArena"] = 12345
         card[
@@ -73,10 +79,9 @@ def fetch17LandsRatings(expansion, format, outputFilename):
     print("done")
 
 
-def rateCardByWinrate(card, minWR, maxWR):
-    # Turn 17Lands card statistics into a 0-10 rating
-    # Very simple first attempt: based on in-deck winrate
-    return round(10 * (card["win_rate"] - minWR) / (maxWR - minWR))
+def rateCardByLastSeenAt(card, minSeen, maxSeen):
+    # based on how late a card was still being passed round in packs
+    return round(10 - 10 * (card["avg_seen"] - minSeen) / (maxSeen - minSeen))
 
 
 def parseCSV(filename):
