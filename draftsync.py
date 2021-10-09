@@ -7,7 +7,8 @@ def main():
     expansion = "MID"
     format = "PremierDraft"
     # Grab data from 17Lands
-    cardRatings = fetch.fetch17LandsRatings(expansion, format)
+    rawRatings = fetch.fetch17LandsRatings(expansion, format)
+    cardRatings = fetch.convert17LandsRatings(rawRatings)
 
     # Upload to MTGAHelper endpoint
     userId = input("Enter your MTGAHelper user ID (from your Profile page):")

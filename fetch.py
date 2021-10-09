@@ -1,5 +1,6 @@
 import csv
 import requests
+import card_id_map
 
 CSV_FIELD_NAMES = [
     "idArena",
@@ -17,7 +18,9 @@ def main():
     format = "PremierDraft"
     outputFilename = f"17-lands-{expansion}-{format}.csv"
 
-    cardRatings = fetch17LandsRatings(expansion, format)
+    rawRatings = fetch17LandsRatings(expansion, format)
+
+    cardRatings = convert17LandsRatings(rawRatings)
 
     writeToCSV(cardRatings, outputFilename)
 
@@ -40,7 +43,10 @@ def fetch17LandsRatings(expansion, format):
 
     cardRatings = response.json()
     print(f"Received ratings for {len(cardRatings)} cards.")
+    return cardRatings
 
+
+def convert17LandsRatings(cardRatings):
     # Find min and max of key states to scale ratings
     minSeen = cardRatings[0]["avg_seen"]
     maxSeen = minSeen
@@ -56,16 +62,26 @@ def fetch17LandsRatings(expansion, format):
         if card["avg_seen"] > maxSeen:
             maxSeen = card["avg_seen"]
 
+    # Load name-to-arenaID lookup map
+    arenaIdLookup = card_id_map.load_map()
+
+    # Return just the fields we are interested in
+    convertedRatings = []
     for card in cardRatings:
+        newCard = {}
+        newCard["name"] = card["name"]
+        newCard["color"] = card["color"]
+        newCard["rarity"] = card["rarity"]
         # Calculate a 1-10 rating based on winrate
-        card["rating"] = rateCardByLastSeenAt(card, minSeen, maxSeen)
+        newCard["rating"] = rateCardByLastSeenAt(card, minSeen, maxSeen)
         # Lookup the card's MTG Arena id
-        card["idArena"] = 12345
-        card[
+        newCard["idArena"] = arenaIdLookup[card["name"]]
+        newCard[
             "note"
         ] = f"ALSA: {card['avg_seen']:.1f} | OH: {card['opening_hand_win_rate']*100:.1f} | GIH: {card['ever_drawn_win_rate']*100:.1f} | IWD: {card['drawn_improvement_win_rate']*100:.1f}"
+        convertedRatings.append(newCard)
 
-    return cardRatings
+    return convertedRatings
 
 
 def rateCardByLastSeenAt(card, minSeen, maxSeen):
