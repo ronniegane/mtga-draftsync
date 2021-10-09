@@ -1,5 +1,7 @@
 import csv
 import requests
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 import card_id_map
 
 CSV_FIELD_NAMES = [
@@ -39,8 +41,8 @@ def fetch17LandsRatings(expansion, format):
     queryParams = {
         "expansion": expansion,
         "format": format,
-        "start_date": "2021-01-01",
-        "end_date": "2021-10-09",
+        "start_date": (datetime.today() - relativedelta(years=1)).strftime("%Y-%m-%d"),
+        "end_date": datetime.today().strftime("%Y-%m-%d"),
     }
     print(f"Set: {expansion} | Format: {format}")
     print("Requesting latest card ratings from 17Lands...")
