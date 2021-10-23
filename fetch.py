@@ -3,6 +3,7 @@ import requests
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 import card_id_map
+from pick import pick
 
 CSV_FIELD_NAMES = [
     "idArena",
@@ -17,14 +18,13 @@ CSV_FIELD_NAMES = [
 def main():
     # If called directly, download and store as CSV
     expansion = (
-        input("Enter MTG set to update, or leave blank to default to MID: ") or "MID"
+        input("Enter MTG set, or leave blank to default to MID: ") or "MID"
     )
-    format = (
-        input(
-            "Enter draft type to fetch ratings for, or leave blank to default to Premier: "
-        )
-        or "PremierDraft"
-    )
+    # Valid formats fetched from https://www.17lands.com/data/formats
+    valid_formats = ["PremierDraft", "TradDraft", "QuickDraft", "CompDraft", "Sealed", "TradSealed", "CubeDraft", "CubeSealed", "DraftChallenge", "OpenSealed_D1_Bo1", "OpenSealed_D1_Bo3", "OpenSealed_D2_Bo3"]
+    pick_title = "Choose a draft type to fetch ratings for"
+    format = pick(valid_formats, pick_title)[0]
+
     outputFilename = f"17-lands-{expansion}-{format}.csv"
 
     rawRatings = fetch17LandsRatings(expansion, format)
